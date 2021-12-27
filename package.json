@@ -1,0 +1,31 @@
+{
+  "name": "ocelot-ocelot",
+  "version": "1.0.0",
+  "description": "An employee tracker using Node.js inquirer and MySQL",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erin-michon/ocelot-ocelot.git"
+  },
+  "keywords": [
+    "node.js",
+    "inquirer",
+    "MySQL"
+  ],
+  "author": "E. Michon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erin-michon/ocelot-ocelot/issues"
+  },
+  "homepage": "https://github.com/erin-michon/ocelot-ocelot#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "inquirer": "^8.2.0",
+    "jest": "^27.4.5",
+    "mysql2": "^2.3.3"
+  }
+}
