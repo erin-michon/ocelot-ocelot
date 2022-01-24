@@ -136,3 +136,5 @@ router.delete('/employee/:id', (req, res) => {
 
 
 // view employees by manager
+
+module.exports = router;

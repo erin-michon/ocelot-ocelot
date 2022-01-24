@@ -74,3 +74,5 @@ router.delete('/department/:id', (req, res) => {
 
 
 // view total salaries by dept
+
+module.exports = router;
