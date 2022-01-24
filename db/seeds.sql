@@ -6,15 +6,15 @@ INSERT INTO department (name)
 
 INSERT INTO role (title, salary, department_id)
   VALUES
-  ('Manager', '55000.00', '1')
-  ('Manager', '55000.00', '2')
+  ('Manager', '55000.00', '1'),
+  ('Manager', '55000.00', '2'),
   ('Work Chain Analyst','50000.00', '2'),
   ('Spare Part Coordinator','50000.00', '1'),
   ('Specification Gatekeeper','50000.00', '1'),
   ('Catalog Gatekeeper','40000.00', '1'),
   ('Catalog Analyst','55000.00', '1'),
-  ('MTO Coordinator','50000.00', '1')
-  ('Stores Supervisor','45000.00', '3')
+  ('MTO Coordinator','50000.00', '1'),
+  ('Stores Supervisor','45000.00', '3');
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id )
     VALUES
