@@ -1,16 +1,13 @@
 //Application Dependencies
 const inquirer = require('inquirer');
-const mysql = require("mysql2");
-const Department = require('./lib/Department');
+const db = require('./db/connection');
+const cTable = require('console.table');
 
-// Connect to database
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: 'emp_tracker_db'
-  });
-
+db.connect(err => {
+    if(err) throw err;
+    console.log('Connected to the Employee Tracker DB');
+    appOptions();
+})
 
 //Initial Application Menu Options
 const appOptions = () => {
@@ -37,6 +34,7 @@ const appOptions = () => {
         if(userOption.userAction === 'View All Departments') {
             console.log('View All Departments was selected')
             //Show Table (Dept) with department names and department ids
+            viewDepts();
 
         } else if (userOption.userAction === 'View All Roles') {
             console.log('View All Roles was selected')
