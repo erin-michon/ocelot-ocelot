@@ -6,8 +6,8 @@ INSERT INTO department (name)
 
 INSERT INTO role (title, salary, department_id)
   VALUES
-  ('Manager', '$55,000.00', '1'),
-  ('Manager', '$55,000.00', '2'),
+  ('MDM Manager', '$57,000.00', '1'),
+  ('IM Clearing House Manager', '$55,000.00', '2'),
   ('Work Chain Analyst','$50,000.00', '2'),
   ('Spare Part Coordinator','$50,000.00', '1'),
   ('Specification Gatekeeper','$50,000.00', '1'),

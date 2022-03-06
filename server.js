@@ -31,20 +31,12 @@ const appOptions = () => {
         const {useAction} = userOption;
 
         if(userOption.userAction === 'View All Departments') {
-            console.log('View All Departments was selected')
-            //Show Table (Dept) with department names and department ids
             viewDepts();
 
         } else if (userOption.userAction === 'View All Roles') {
-            console.log('View All Roles was selected')
-            //Show Table (Roles) with job title, role id, the department that role belongs to, 
-            //and the salary for that role
             viewRoles();
 
         } else if (userOption.userAction === 'View All Employees') {
-            console.log('View All Employees was selected')
-            //Show Table (Employees) with employee data, including employee ids, first names, last names,
-            // job titles, departments, salaries, and managers that the employees report to
             viewEmployees();
 
         } else if (userOption.userAction === 'Add a Department') {
@@ -96,9 +88,9 @@ viewDepts = () => {
 //and the salary for that role
 viewRoles = () => {
     console.log(`
-     =====
-     Roles 
-     =====
+            =====
+            Roles 
+            =====
     `);
     const sql = `SELECT role.title AS 'Job Title',
                 role.id AS 'ID',
@@ -122,17 +114,18 @@ viewEmployees = () => {
      Empoloyees 
      ==========
     `);
-    const sql = `SELECT employee.id AS 'ID', 
-                employee.first_name AS 'First Name',
-                employee.last_name AS 'Last Name',
-                role.title as 'Job Title',
-                department.name as 'Department',
-                role.salary as 'Salary'
-                CONCAT(manager.first_name, " ", manager.last_name) AS manager
-                FROM employees
+    const sql = `SELECT
+                    employee.id AS employee_id,
+                    employee.first_name,
+                    employee.last_name,
+                    role.title AS job_title,
+                    department.name AS department,
+                    role.salary AS salary,
+                    CONCAT(manager.first_name, " ", manager.last_name) AS manager
+                FROM employee
                 INNER JOIN role ON employee.role_id=role.id
                 INNER JOIN department ON role.department_id=department.id
-                LEFT JOIN employee manager ON employee.manager_id=manager.id`
+                LEFT JOIN employee manager ON employee.manager_id=manager.id`;
     db.query(sql, (err, rows) => {
         if(err) throw err;
         console.table(rows);
@@ -140,11 +133,6 @@ viewEmployees = () => {
 
     });
 };
-
-
-
-
-
 
 //Create a function that when prompted to enter the name of the department and that department is added to the database
 addDept = () => {
