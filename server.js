@@ -11,9 +11,9 @@ db.connect(err => {
 const appOptions = () => {
 
     console.log(`
-    ===============================
-    Weclome to the Employee Tracker
-    ===============================
+            ===============================
+            Weclome to the Employee Tracker
+            ===============================
     `);
 
     return inquirer.prompt([
@@ -46,13 +46,9 @@ const appOptions = () => {
             addRole();
 
         } else if (userOption.userAction === 'Add an Employee') {
-            console.log('Add an Employee was selected')
-            //Create a function that prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
             addEmployee();
 
         } else if (userOption.userAction === 'Update an Employee Role') {
-            console.log('Update an Employee Role')
-            //Create a function that prompted to select an employee and then prompts the user for the role to update and their new role and this information in the database
             updateEmployee();
         }; 
 
@@ -63,9 +59,9 @@ const appOptions = () => {
 //Show Table (Dept) with department names and department ids
 viewDepts = () => {
     console.log(`
-     ===========
-     Departments 
-     ===========
+                    ===========
+                    Departments 
+                    ===========
     `);
     const sql = `SELECT department.id AS id,
                 department.name AS department 
@@ -83,9 +79,9 @@ viewDepts = () => {
 //and the salary for that role
 viewRoles = () => {
     console.log(`
-            =====
-            Roles 
-            =====
+                    =====
+                    Roles 
+                    =====
     `);
     const sql = `SELECT role.title AS 'Job Title',
                 role.id AS 'ID',
@@ -105,9 +101,9 @@ viewRoles = () => {
 // job titles, departments, salaries, and managers that the employees report to
 viewEmployees = () => {
     console.log(`
-     ==========
-     Empoloyees 
-     ==========
+                    ==========
+                    Empoloyees 
+                    ==========
     `);
     const sql = `SELECT
                     employee.id AS employee_id,
@@ -133,9 +129,9 @@ viewEmployees = () => {
 addDept = () => {
 
     console.log(`
-    =======================
-    Adding a New Department
-    =======================
+            =======================
+            Adding a New Department
+            =======================
     `);
 
     return inquirer.prompt([
@@ -174,9 +170,9 @@ addRole = () => {
         });
 
     console.log(`
-    =================
-    Adding a New Role
-    =================
+                =================
+                Adding a New Role
+                =================
     `);
 
     return inquirer.prompt([
@@ -244,9 +240,9 @@ addEmployee = () => {
     });
 
     console.log(`
-    =====================
-    Adding a New Employee
-    =====================
+                =====================
+                Adding a New Employee
+                =====================
     `);
 
     return inquirer.prompt([
@@ -287,7 +283,70 @@ addEmployee = () => {
 });
 };
 
+//Create a function that prompted to select an employee and then prompts the user for the role to update and their new role and this information in the database
+updateEmployee = () => {
 
+    const sqlDos = `SELECT * FROM employee`;
+    db.query(sqlDos, (err, response) => {
+    if(err) throw err;
+    let empArray = [];
+    response.forEach((employee) => {
+        let empObj = {
+            name: employee.last_name + ", " + employee.first_name,
+            value: employee.id
+        }
+        empArray.push(empObj);
+    });
+
+    let roleArray = [];
+
+    const sql = `SELECT * FROM role`;
+    db.query(sql, (err, response) => {
+        if(err) throw err;
+        response.forEach((role) => {
+            let roleObj = {
+                name: role.title,
+                value: role.id
+            }
+            roleArray.push(roleObj);
+        },
+    )
+    });
+
+    console.log(`
+            ===============================
+            Updating a Role for an Employee
+            ===============================
+    `);
+
+    return inquirer.prompt([
+
+        {
+            name: 'empName',
+            type: 'list',
+            message: 'Please select the employee whose role you wish to update.',
+            choices: empArray
+        },
+        {
+            name: 'roleName',
+            type: 'list',
+            message: 'Please select the new role of this employee.',
+            choices: roleArray
+        },
+    ])
+    .then(empRoleAnswer => {
+        const sql = `UPDATE employee 
+                        SET ?
+                        WHERE id = ?`
+        const params = [{role_id: empRoleAnswer.roleName}, empRoleAnswer.empName];
+        db.query(sql, params, (err, result) => {
+            if(err) throw err;
+            console.log( 'The role has been updated.' )
+            appOptions();
+        }); 
+    });
+});
+};
 
 //Start Application
 appOptions();
