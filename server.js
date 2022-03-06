@@ -23,7 +23,7 @@ const appOptions = () => {
             name: 'userAction',
             choices: ["View All Departments", "View All Roles", "View All Employees", 
             "Add a Department", "Add a Role", "Add an Employee", "Update an Employee Role"],           
-            message: "Hello! Please choose your action from the menu below:"
+            message: "Please choose your action from the menu below:"
         }
     
     ])
@@ -40,9 +40,6 @@ const appOptions = () => {
             viewEmployees();
 
         } else if (userOption.userAction === 'Add a Department') {
-            console.log('Add a Department was selected')
-            //Create a function that when prompted to enter the name of the department and that department
-            // is added to the database
             addDept();
 
         } else if (userOption.userAction === 'Add a Role') {
@@ -78,7 +75,7 @@ viewDepts = () => {
     db.query(sql, (err, rows) => {
         if(err) throw err;
         console.table(rows);
-        // appOptions()
+        appOptions()
 
     });
 };
@@ -101,7 +98,7 @@ viewRoles = () => {
     db.query(sql, (err, rows) => {
         if(err) throw err;
         console.table(rows);
-        // appOptions()
+        appOptions()
 
     });
 };
@@ -129,7 +126,7 @@ viewEmployees = () => {
     db.query(sql, (err, rows) => {
         if(err) throw err;
         console.table(rows);
-        // appOptions()
+        appOptions()
 
     });
 };
@@ -151,23 +148,25 @@ addDept = () => {
             message: "Please enter the name of the new Department",
         },
     ])
-    .then(newDept => {
-        const {deptName} = newDept;
-        console.log()
-
-        if(userOption.userAction === 'View All Departments') {
-            console.log('View All Departments was selected')
-            //Show Table (Dept) with department names and department ids
-
-        } else if (userOption.userAction === 'View All Roles') {
-            console.log('View All Roles was selected')
-            //Show Table (Roles) with job title, role id, the department that role belongs to, 
-            //and the salary for that role
-        }
-            
-        
+    .then(deptAnswer => {
+        const sql = `INSERT INTO department (name)
+                        VALUES (?)`
+        const params = [deptAnswer.deptName];
+        db.query(sql, params, (err, result) => {
+            if(err) throw err;
+            console.log(deptAnswer.deptName + ' has been added as a department.');
+            appOptions();
+        }); 
     });
-};
+}
+
+
+
+
+
+
+
+
 
 //Start Application
 appOptions();
