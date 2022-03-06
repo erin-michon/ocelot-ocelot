@@ -43,8 +43,6 @@ const appOptions = () => {
             addDept();
 
         } else if (userOption.userAction === 'Add a Role') {
-            console.log('Add a Role was selected')
-            //Create a function that when prompted to enter the name, salary, and department for the role and that role is added to the database
             addRole();
 
         } else if (userOption.userAction === 'Add an Employee') {
@@ -160,11 +158,134 @@ addDept = () => {
     });
 }
 
+//Create a function that when prompted to enter the name, salary, and department for the role and that role is added to the database
+addRole = () => {
+
+    const sql = `SELECT * FROM department`
+    db.query(sql, (err, response) => {
+        if(err) throw err;
+        let deptArray = [];
+        response.forEach((department) => {
+            let deptObj = {
+                name: department.name,
+                value: department.id
+            }
+            deptArray.push(deptObj);
+        });
+
+    console.log(`
+    =================
+    Adding a New Role
+    =================
+    `);
+
+    return inquirer.prompt([
+
+        {
+            type: 'input',
+            name: 'roleName',
+            message: "Please enter the name of the new role.",
+        },
+        {
+            type: 'input',
+            name: 'roleSalary',
+            message: "Please enter the salary of the new role.",
+        },
+        {
+            name: 'deptName',
+            type: 'list',
+            message: 'Please select the department associated with the new role.',
+            choices: deptArray
+        },
+    ])
+    .then(roleAnswer => {
+        const sql = `INSERT INTO role (title, salary, department_id)
+                        VALUES (?,?,?)`
+        const params = [roleAnswer.roleName, roleAnswer.roleSalary, roleAnswer.deptName];
+        db.query(sql, params, (err, result) => {
+            if(err) throw err;
+            console.log(roleAnswer.roleName + ' has been added as a role.');
+            appOptions();
+        }); 
+    });
+});
+};
 
 
 
+//Create a function that prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
+addEmployee = () => {
 
+    let roleArray = [];
 
+    const sql = `SELECT * FROM role`;
+    db.query(sql, (err, response) => {
+        if(err) throw err;
+        response.forEach((role) => {
+            let roleObj = {
+                name: role.title,
+                value: role.id
+            }
+            roleArray.push(roleObj);
+        },
+    )
+    });
+
+    const sqlDos = `SELECT * FROM employee`;
+    db.query(sqlDos, (err, response) => {
+    if(err) throw err;
+    let mgrArray = [];
+    response.forEach((employee) => {
+        let mgrObj = {
+            name: employee.last_name + ", " + employee.first_name,
+            value: employee.id
+        }
+        mgrArray.push(mgrObj);
+    });
+
+    console.log(`
+    =====================
+    Adding a New Employee
+    =====================
+    `);
+
+    return inquirer.prompt([
+
+        {
+            type: 'input',
+            name: 'empFirstName',
+            message: "Please enter the first name of the new employee.",
+        },
+        {
+            type: 'input',
+            name: 'empLastName',
+            message: "Please enter the last name of the new employee.",
+        },
+        {
+            name: 'roleName',
+            type: 'list',
+            message: 'Please select the role of the new employee.',
+            choices: roleArray
+        },
+        {
+            name: 'mgrName',
+            type: 'list',
+            message: 'Please select the name of the manager for the new employee.',
+            choices: mgrArray
+        },
+    ])
+    .then(empAnswer => {
+        const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id)
+                        VALUES (?,?,?, ?)`
+        const params = [empAnswer.empFirstName, empAnswer.empLastName, empAnswer.roleName, empAnswer.mgrName];
+        db.query(sql, params, (err, result) => {
+            if(err) throw err;
+            console.log( empAnswer.empFirstName + ' ' + empAnswer.empLastName + 'has been added as an employee.' )
+            appOptions();
+        }); 
+    });
+});
+};
 
 
 
